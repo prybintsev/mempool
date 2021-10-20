@@ -14,7 +14,7 @@ func (t testPriorityItem) Priority() float64  {
 	return t.priority
 }
 
-func TestMemPool_PriorityOrdering(t *testing.T) {
+func TestPriorityQueue_PriorityOrdering(t *testing.T) {
 	tests := map[string]struct {
 		inputTxs []testPriorityItem
 		expectedOutput []testPriorityItem
@@ -56,14 +56,14 @@ func TestMemPool_PriorityOrdering(t *testing.T) {
 	for tName, tc := range tests {
 		tc := tc
 		t.Run(tName, func(t *testing.T) {
-			memPool := NewMemPool()
+			priorityQueue := NewPriorityQueue(100)
 			for _, tx := range tc.inputTxs {
-				memPool.Push(tx)
+				priorityQueue.Push(tx)
 			}
 
 			output := []testPriorityItem{}
 			for i := 0; i < len(tc.inputTxs); i++ {
-				item := memPool.Pop()
+				item := priorityQueue.Pop()
 				testItem := item.(testPriorityItem)
 				output = append(output, testItem)
 			}
@@ -74,45 +74,45 @@ func TestMemPool_PriorityOrdering(t *testing.T) {
 }
 
 
-func TestMemPool_OverCapacity(t *testing.T) {
-	memPool := NewMemPool()
-	for i := 0; i <  5500; i++ {
-		memPool.Push(testPriorityItem{priority: float64(i)})
+func TestPriorityQueue_Capacity(t *testing.T) {
+	priorityQueue := NewPriorityQueue(10)
+	for i := 0; i <  15; i++ {
+		priorityQueue.Push(testPriorityItem{priority: float64(i)})
 	}
 
 	var expectedOutput []PriorityItem
-	for i := 5499; i >= 500; i-- {
+	for i := 14; i >= 5; i-- {
 		expectedOutput = append(expectedOutput, testPriorityItem{priority: float64(i)})
 	}
 
 	var output []PriorityItem
 	for {
-		if memPool.Len() == 0 {
+		if priorityQueue.Len() == 0 {
 			break
 		}
-		item := memPool.Pop()
+		item := priorityQueue.Pop()
 		output = append(output, item)
 	}
 
 	require.Equal(t, expectedOutput, output)
 }
 
-func TestMemPool_PoppingFromEmptyMemPool(t *testing.T) {
-	memPool := NewMemPool()
-	memPool.Push(testPriorityItem{priority: float64(1)})
-	memPool.Push(testPriorityItem{priority: float64(2)})
-	memPool.Push(testPriorityItem{priority: float64(3)})
+func TestPriorityQueue_PoppingFromEmpty(t *testing.T) {
+	priorityQueue := NewPriorityQueue(100)
+	priorityQueue.Push(testPriorityItem{priority: float64(1)})
+	priorityQueue.Push(testPriorityItem{priority: float64(2)})
+	priorityQueue.Push(testPriorityItem{priority: float64(3)})
 
-	require.Equal(t, 3, memPool.Len())
+	require.Equal(t, 3, priorityQueue.Len())
 
-	require.Equal(t, float64(3), memPool.Pop().Priority())
-	require.Equal(t, 2, memPool.Len())
-	require.Equal(t, float64(2), memPool.Pop().Priority())
-	require.Equal(t, 1, memPool.Len())
-	require.Equal(t, float64(1), memPool.Pop().Priority())
-	require.Equal(t, 0, memPool.Len())
+	require.Equal(t, float64(3), priorityQueue.Pop().Priority())
+	require.Equal(t, 2, priorityQueue.Len())
+	require.Equal(t, float64(2), priorityQueue.Pop().Priority())
+	require.Equal(t, 1, priorityQueue.Len())
+	require.Equal(t, float64(1), priorityQueue.Pop().Priority())
+	require.Equal(t, 0, priorityQueue.Len())
 
 	require.Panics(t, func() {
-		memPool.Pop()
+		priorityQueue.Pop()
 	})
 }
