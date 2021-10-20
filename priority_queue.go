@@ -68,9 +68,9 @@ func (q *queue) Pop() interface{} {
 
 // Push adds an item to the priority queue
 // When the capacity is surpassed, item with the lowest priority will be dropped
-func (m *PriorityQueue) Push(tx PriorityItem) {
-	minItem := queueItem{priorityItem: tx}
-	maxItem := queueItem{priorityItem: tx}
+func (m *PriorityQueue) Push(item PriorityItem) {
+	minItem := queueItem{priorityItem: item}
+	maxItem := queueItem{priorityItem: item}
 	maxItem.pairItem = &minItem
 	minItem.pairItem = &maxItem
 

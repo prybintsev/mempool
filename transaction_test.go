@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestReadTransactions(t *testing.T) {
+func TestTransactions_Read(t *testing.T) {
 	tests := map[string]struct {
 		line          string
 		expectedTx    Transaction
@@ -80,4 +80,9 @@ func TestReadTransactions(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestTransaction_String(t *testing.T) {
+	tx := Transaction{Hash: "ABC123",Gas: 456, FeePerGas: "0.35", Signature: "test_signature"}
+	require.Equal(t, "TxHash=ABC123 Gas=456 FeePerGas=0.35 Signature=test_signature", tx.String())
 }

@@ -38,6 +38,11 @@ func (t Transaction) Fee() float64 {
 	return t.feePerGasNumeric * float64(t.Gas)
 }
 
+func (t Transaction) String() string {
+	format := fmt.Sprintf("%s=%%s %s=%%v %s=%%s %s=%%s", KeyHash, KeyGas, KeyFee, KeySignature)
+	return fmt.Sprintf(format, t.Hash, t.Gas, t.FeePerGas, t.Signature)
+}
+
 func ReadTransaction(line string) (Transaction, error) {
 	var tx Transaction
 	var err error
