@@ -15,6 +15,12 @@ func main() {
 		fmt.Printf("%s\n", err)
 		return
 	}
+	defer func() {
+		err = input.Close()
+		if err != nil {
+			fmt.Printf("%s\n", err)
+		}
+	}()
 	err = m.ReadTransactions(input)
 	if err != nil {
 		fmt.Printf("%s\n", err)
