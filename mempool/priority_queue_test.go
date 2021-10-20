@@ -1,4 +1,4 @@
-package memepool
+package mempool
 
 import (
 	"testing"

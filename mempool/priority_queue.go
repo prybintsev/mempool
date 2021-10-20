@@ -1,4 +1,4 @@
-package memepool
+package mempool
 
 import "container/heap"
 
@@ -6,7 +6,7 @@ import "container/heap"
 // This allows to remove items from the head and the tail of the queue with O(log(n)) complexity, allowing not to discard
 // the lowest priority item when the capacity is reached and keeping the O(log(n)) complexity of insert operation
 type queueItem struct {
-	pairItem *queueItem
+	pairItem     *queueItem
 	idx          int
 	priorityItem PriorityItem
 }
